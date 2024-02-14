@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import formatTime from '../utils/formatTime';
+import Header from './Header';
 import imgSrc from '../assets/waldo.jpeg';
 import '../assets/styles/game.css';
 
@@ -28,25 +28,9 @@ export default function Game({ setStartGame }: GameProps) {
     return () => resizeObserver.unobserve(head);
   }, []);
 
-  const onLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    setStartGame(false);
-  };
-
   return (
     <>
-      <header ref={headRef}>
-        <a
-          href="/"
-          className="logo"
-          onClick={onLogoClick}
-          aria-label="Go back to home page"
-        >
-          Where's Waldo
-        </a>
-
-        <span>{formatTime(time)}</span>
-      </header>
+      <Header setStartGame={setStartGame} time={time} ref={headRef} />
 
       <main className="game" ref={mainRef}>
         <img src={imgSrc} alt="Where's Waldo picture" />
