@@ -1,0 +1,24 @@
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 2rem;
+}
+
+.logo {
+  color: black;
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: bold;
+  letter-spacing: -0.1rem;
+  white-space: nowrap;
+}
+
+.game {
+  overflow: auto;
+}
+
+img {
+  display: block;
+  margin: 0 auto;
+}

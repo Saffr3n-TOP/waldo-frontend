@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Index from './components/Index';
+import Game from './components/Game';
 
 export default function App() {
   const [startGame, setStartGame] = useState(false);
@@ -7,6 +8,6 @@ export default function App() {
   return !startGame ? (
     <Index setStartGame={setStartGame} />
   ) : (
-    'TODO: Game component'
+    <Game setStartGame={setStartGame} />
   );
 }
