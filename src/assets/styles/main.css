@@ -1,0 +1,23 @@
+:root {
+  --sans: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+    'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  --serif: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+
+  font-family: var(--sans);
+  font-size: clamp(14px, 4vw, 20px);
+  line-height: 1.2;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100dvh;
+}
+
+#root {
+  height: 100%;
+}
