@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import formatTime from '../utils/formatTime';
 import imgSrc from '../assets/waldo.jpeg';
 import '../assets/styles/game.css';
@@ -9,10 +9,23 @@ type GameProps = {
 
 export default function Game({ setStartGame }: GameProps) {
   const [time, setTime] = useState(0);
+  const headRef = useRef<HTMLElement>(null);
+  const mainRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const interval = setInterval(() => setTime((time) => time + 1), 1000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const head = headRef.current!;
+    const main = mainRef.current!;
+    const resizeObserver = new ResizeObserver(() => {
+      main.style.height = `calc(100dvh - ${head.clientHeight}px)`;
+    });
+
+    resizeObserver.observe(head);
+    return () => resizeObserver.unobserve(head);
   }, []);
 
   const onLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -22,7 +35,7 @@ export default function Game({ setStartGame }: GameProps) {
 
   return (
     <>
-      <header>
+      <header ref={headRef}>
         <a
           href="/"
           className="logo"
@@ -35,7 +48,7 @@ export default function Game({ setStartGame }: GameProps) {
         <span>{formatTime(time)}</span>
       </header>
 
-      <main className="game">
+      <main className="game" ref={mainRef}>
         <img src={imgSrc} alt="Where's Waldo picture" />
       </main>
     </>
