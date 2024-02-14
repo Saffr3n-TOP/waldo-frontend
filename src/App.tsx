@@ -1,3 +1,12 @@
+import { useState } from 'react';
+import Index from './components/Index';
+
 export default function App() {
-  return <div></div>;
+  const [startGame, setStartGame] = useState(false);
+
+  return !startGame ? (
+    <Index setStartGame={setStartGame} />
+  ) : (
+    'TODO: Game component'
+  );
 }

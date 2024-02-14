@@ -1,0 +1,36 @@
+.index {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 1rem;
+  height: 100%;
+  padding: 0.5rem;
+}
+
+h1 {
+  font-family: var(--serif);
+}
+
+p {
+  text-align: center;
+}
+
+button {
+  padding: 0.2rem 2rem;
+  border: none;
+  border-radius: 16px;
+  background-color: blue;
+  color: white;
+  font-family: var(--serif);
+  font-size: inherit;
+  line-height: inherit;
+}
+
+button:hover,
+button:focus {
+  background-color: darkblue;
+}
+
+button:active {
+  background-color: blue;
+}
