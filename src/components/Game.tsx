@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+import formatTime from '../utils/formatTime';
 import imgSrc from '../assets/waldo.jpeg';
 import '../assets/styles/game.css';
 
@@ -6,6 +8,13 @@ type GameProps = {
 };
 
 export default function Game({ setStartGame }: GameProps) {
+  const [time, setTime] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => setTime((time) => time + 1), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   const onLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     setStartGame(false);
@@ -23,7 +32,7 @@ export default function Game({ setStartGame }: GameProps) {
           Where's Waldo
         </a>
 
-        <span>4:20</span>
+        <span>{formatTime(time)}</span>
       </header>
 
       <main className="game">
