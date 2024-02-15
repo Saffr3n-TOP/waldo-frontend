@@ -22,3 +22,29 @@ img {
   display: block;
   margin: 0 auto;
 }
+
+ul {
+  position: absolute;
+  display: grid;
+  width: 50%;
+  max-width: max-content;
+  max-height: 50%;
+  border: 1px solid black;
+  box-shadow: 4px 4px 8px 0 black;
+  background-color: white;
+  font-size: 0.7rem;
+  list-style: none;
+  overflow: auto;
+}
+
+li {
+  padding: 0.5rem;
+}
+
+li:nth-child(2n + 1) {
+  background-color: #eee;
+}
+
+a {
+  color: black;
+}

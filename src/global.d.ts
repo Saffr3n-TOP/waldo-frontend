@@ -1,3 +1,9 @@
+declare type Point = [number, number];
+declare type Polygon = {
+  _id: string;
+  name: string;
+};
+
 declare type ApiError = {
   status: number;
   message: string;
