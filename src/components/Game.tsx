@@ -98,9 +98,21 @@ export default function Game({ setStartGame }: GameProps) {
 
         {data.end && (
           <>
-            <p>{`You win! Time spent: ${formatTime(
+            <h1>You win!</h1>
+
+            <p>{`Time spent: ${formatTime(
               Math.floor((data.end - data.start) / 1000)
             )}`}</p>
+
+            <p>Save your results to leaderboard!</p>
+
+            <form action="http://localhost:3000/leaderboard" method="POST">
+              <label htmlFor="name">
+                Name
+                <input type="text" name="name" id="name" required />
+              </label>
+              <button type="submit">Submit</button>
+            </form>
           </>
         )}
       </main>

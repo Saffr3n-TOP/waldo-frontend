@@ -34,3 +34,12 @@ button:focus {
 button:active {
   background-color: blue;
 }
+
+form {
+  display: grid;
+  gap: 0.5rem;
+}
+
+label {
+  display: grid;
+}
