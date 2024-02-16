@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import useFetch from '../utils/useFetch';
+import formatTime from '../utils/formatTime';
 import Header from './Header';
+import Dropdown from './Dropdown';
 import imgSrc from '../assets/waldo.jpeg';
 import '../assets/styles/game.css';
 
@@ -8,26 +10,22 @@ type GameProps = {
   setStartGame: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-type PointData = {
-  clientX: number;
-  clientY: number;
-  offsetX: number;
-  offsetY: number;
-  windowWidth: number;
-  windowHeight: number;
-};
-
 export default function Game({ setStartGame }: GameProps) {
   const [time, setTime] = useState(0);
-  const { error, data } = useFetch('http://localhost:3000');
+  const { error, data, setError, setData } = useFetch();
   const [pointData, setPointData] = useState<PointData>();
 
   const headRef = useRef<HTMLElement>(null);
   const mainRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (!data) return;
-    const interval = setInterval(() => setTime((time) => time + 1), 1000);
+    if (!data?.polygons) return;
+
+    const interval = setInterval(
+      () => setTime(Math.floor((Date.now() - data.start) / 1000)),
+      1000
+    );
+
     return () => clearInterval(interval);
   }, [data]);
 
@@ -63,49 +61,50 @@ export default function Game({ setStartGame }: GameProps) {
     setPointData(data);
   };
 
-  const onLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    // TODO
-  };
-
   return data ? (
     <>
       <Header setStartGame={setStartGame} time={time} ref={headRef} />
 
-      <main className="game" ref={mainRef}>
-        <img src={imgSrc} alt="Where's Waldo picture" onClick={onImageClick} />
+      <main className={data.polygons ? 'game' : 'index'} ref={mainRef}>
+        {data.polygons && (
+          <>
+            <img
+              src={imgSrc}
+              alt="Where's Waldo picture"
+              onClick={onImageClick}
+            />
 
-        {pointData && (
-          <ul style={dropdownStyle(pointData)}>
-            {Object.values(data.polygons!).map((polygon) => {
-              if (polygon.isFound) return;
-              return (
-                <li key={polygon._id}>
-                  <a href={`/${polygon._id}`} onClick={onLinkClick}>
-                    {polygon.name}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
+            {pointData && (
+              <Dropdown
+                pointData={pointData}
+                setPointData={setPointData}
+                polygons={data.polygons}
+                setError={setError}
+                setData={setData}
+              />
+            )}
+          </>
+        )}
+
+        {data.end && (
+          <>
+            <p>{`You win! Time spent: ${formatTime(
+              Math.floor((data.end - data.start) / 1000)
+            )}`}</p>
+          </>
         )}
       </main>
     </>
-  ) : error ? (
-    error.message
   ) : (
-    'Loading...'
+    <main className="index">
+      {error ? (
+        <>
+          <h1>{error.message}</h1>
+          <p>Please try again later...</p>
+        </>
+      ) : (
+        <p>Loading...</p>
+      )}
+    </main>
   );
-}
-
-function dropdownStyle(pointData: PointData) {
-  const { clientX, clientY, windowWidth, windowHeight } = pointData;
-  const translateX = clientX > windowWidth / 2 ? '-100%' : '0';
-  const translateY = clientY > windowHeight / 2 ? '-100%' : '0';
-
-  return {
-    top: clientY,
-    left: clientX,
-    transform: `translate(${translateX}, ${translateY})`
-  };
 }

@@ -4,6 +4,15 @@ declare type Polygon = {
   name: string;
 };
 
+declare type PointData = {
+  clientX: number;
+  clientY: number;
+  offsetX: number;
+  offsetY: number;
+  windowWidth: number;
+  windowHeight: number;
+};
+
 declare type ApiError = {
   status: number;
   message: string;
