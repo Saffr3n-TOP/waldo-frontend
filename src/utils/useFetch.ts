@@ -7,26 +7,30 @@ export default function useFetch() {
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
-    waldoFetch('/', setError, setData, signal);
+
+    waldoFetch('/', signal).then((result) => {
+      if (result instanceof Error) {
+        return setError(result);
+      }
+      return setData(result);
+    });
+
     return () => controller.abort();
   }, []);
 
   return { error, data, setError, setData };
 }
 
-export async function waldoFetch(
-  url: string,
-  setError: React.Dispatch<React.SetStateAction<ApiError | undefined>>,
-  setData: React.Dispatch<React.SetStateAction<ApiData | undefined>>,
-  signal?: AbortSignal
-) {
+export async function waldoFetch(url: string, signal?: AbortSignal) {
   const response = await fetch(`http://localhost:3000${url}`, {
     signal,
     credentials: 'include'
   }).catch(() => new Error('Server Error'));
 
   if (response instanceof Error) {
-    return setError({ status: 500, message: response.message });
+    const err = new Error(response.message);
+    err.status = 500;
+    return err;
   }
 
   const json: ApiJson | Error = await response
@@ -34,12 +38,16 @@ export async function waldoFetch(
     .catch(() => new Error('Server Error'));
 
   if (json instanceof Error) {
-    return setError({ status: 500, message: json.message });
+    const err = new Error(json.message);
+    err.status = 500;
+    return err;
   }
 
   if (json.error) {
-    return setError(json.error);
+    const err = new Error(json.error.message);
+    err.status = json.error.status;
+    return err;
   }
 
-  setData(json.data);
+  return json.data;
 }

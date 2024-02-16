@@ -1,3 +1,7 @@
+declare interface Error {
+  status: number;
+}
+
 declare type Point = [number, number];
 declare type Polygon = {
   _id: string;
