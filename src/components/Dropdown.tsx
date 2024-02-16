@@ -6,6 +6,7 @@ type DropdownProps = {
   polygons: ApiData['polygons'];
   setError: React.Dispatch<React.SetStateAction<ApiError | undefined>>;
   setData: React.Dispatch<React.SetStateAction<ApiData | undefined>>;
+  setAlert: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 
 export default function Dropdown({
@@ -13,7 +14,8 @@ export default function Dropdown({
   setPointData,
   polygons,
   setError,
-  setData
+  setData,
+  setAlert
 }: DropdownProps) {
   const x = pointData.clientX - pointData.offsetX;
   const y = pointData.clientY - pointData.offsetY;
@@ -33,8 +35,16 @@ export default function Dropdown({
   const onLinkClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     setPointData(undefined);
+
     const link = e.target as HTMLAnchorElement;
-    waldoFetch(`${link.pathname}?point=${x}+${y}`, setError, setData);
+    const result = await waldoFetch(`${link.pathname}?point=${x}+${y}`);
+
+    if (result instanceof Error) {
+      return setError(result);
+    }
+
+    setData(result);
+    setAlert(result?.message);
   };
 
   return (

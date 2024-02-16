@@ -14,6 +14,7 @@ export default function Game({ setStartGame }: GameProps) {
   const [time, setTime] = useState(0);
   const { error, data, setError, setData } = useFetch();
   const [pointData, setPointData] = useState<PointData>();
+  const [alert, setAlert] = useState<string>();
 
   const headRef = useRef<HTMLElement>(null);
   const mainRef = useRef<HTMLElement>(null);
@@ -41,6 +42,12 @@ export default function Game({ setStartGame }: GameProps) {
     resizeObserver.observe(head);
     return () => resizeObserver.unobserve(head);
   }, [data]);
+
+  useEffect(() => {
+    if (!alert) return;
+    const interval = setInterval(() => setAlert(undefined), 3000);
+    return () => clearInterval(interval);
+  }, [alert]);
 
   const onImageClick = (e: React.MouseEvent<HTMLImageElement>) => {
     if (pointData) return setPointData(undefined);
@@ -81,8 +88,11 @@ export default function Game({ setStartGame }: GameProps) {
                 polygons={data.polygons}
                 setError={setError}
                 setData={setData}
+                setAlert={setAlert}
               />
             )}
+
+            {alert && <div className="alert">{alert}</div>}
           </>
         )}
 
