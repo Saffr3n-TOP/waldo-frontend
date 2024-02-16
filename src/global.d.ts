@@ -33,6 +33,10 @@ declare type ApiData = {
       isFound: boolean;
     };
   };
+  leaders?: {
+    name: string;
+    time: number;
+  }[];
 };
 
 declare type ApiJson = {
